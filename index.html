@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chennai Traffic Predictor</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #1a237e;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #4caf50;
+            color: white;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .main-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #1a237e;
+            font-size: 1.5rem;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .range-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        input[type="range"] {
+            flex-grow: 1;
+        }
+
+        .value-display {
+            width: 80px;
+            text-align: right;
+            font-weight: 500;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #1a237e;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #303f9f;
+        }
+
+        button:disabled {
+            background-color: #9e9e9e;
+            cursor: not-allowed;
+        }
+
+        .prediction-box {
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: white;
+            text-align: center;
+        }
+
+        .prediction {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .probability-bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .level-label {
+            width: 70px;
+            flex-shrink: 0;
+            font-weight: 500;
+        }
+
+        .bar-container {
+            flex-grow: 1;
+            height: 20px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            margin-left: 10px;
+        }
+
+        .bar {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease-out;
+        }
+
+        .probability-value {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+        }
+
+        .traffic-advice {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .road {
+            height: 150px;
+            background-color: #424242;
+            border-radius: 5px;
+            position: relative;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .lane {
+            height: 50%;
+            position: relative;
+        }
+
+        .lane-1 {
+            border-bottom: 3px dashed yellow;
+        }
+
+        .vehicle {
+            width: 40px;
+            height: 30px;
+            position: absolute;
+            bottom: 10px;
+            border-radius: 5px;
+        }
+
+        @keyframes driveForward {
+            0% {
+                left: -50px;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+
+        @keyframes driveBackward {
+            0% {
+                right: -50px;
+            }
+            100% {
+                right: 100%;
+            }
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .card {
+                width: 100%;
+            }
+        }
+
+        /* Download button styles */
+        .download-container {
+            text-align: center;
+            margin: 20px auto;
+        }
+
+        .download-btn {
+            display: inline-block;
+            margin: 0 auto;
+            padding: 12px 24px;
+            background-color: #4caf50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .download-btn:hover {
+            background-color: #388e3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Chennai Traffic Predictor</h1>
+            <p>A smart system for predicting traffic congestion</p>
+            <div class="status-badge">Web Demo Mode</div>
+        </header>
+        
+        <div class="main-container">
+            <div class="card" id="input-section">
+                <h2>Traffic Parameters</h2>
+                
+                <div class="input-group">
+                    <label for="vehicle-count">Vehicle Count</label>
+                    <div class="range-container">
+                        <input
+                            id="vehicle-count"
+                            type="range"
+                            min="0"
+                            max="50"
+                            value="20"
+                            oninput="updateVehicleCount(this.value)"
+                        />
+                        <span class="value-display" id="vehicle-count-display">20 vehicles</span>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="avg-speed">Average Speed (km/h)</label>
+                    <div class="range-container">
+                        <input
+                            id="avg-speed"
+                            type="range"
+                            min="10"
+                            max="70"
+                            value="40"
+                            oninput="updateAverageSpeed(this.value)"
+                        />
+                        <span class="value-display" id="avg-speed-display">40 km/h</span>
+                    </div>
+                </div>
+                
+                <button id="predict-btn" onclick="predictTraffic()">
+                    Predict Traffic Congestion
+                </button>
+            </div>
+            
+            <div class="card" id="result-section" style="display: none;">
+                <h2>Traffic Analysis Result</h2>
+                
+                <div class="prediction-box" id="prediction-box">
+                    <h3>Congestion Level:</h3>
+                    <p class="prediction" id="prediction-text">Medium</p>
+                </div>
+                
+                <div class="probabilities">
+                    <h3>Confidence Levels:</h3>
+                    <div id="probability-bars"></div>
+                </div>
+                
+                <div class="traffic-advice">
+                    <h3>Traffic Report:</h3>
+                    <p id="traffic-advice-text"></p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card" id="visualization-section">
+            <h2>Traffic Visualization</h2>
+            <div class="road" id="traffic-road">
+                <div class="lane lane-1" id="lane-1"></div>
+                <div class="lane lane-2" id="lane-2"></div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Chennai Traffic Predictor - A mini project by Arun Ram R & Denny Richard V</p>
+            <p>St. Joseph's Institute of Technology, Chennai</p>
+        </footer>
+    </div>
+
+    <script>
+        // App version
+        const APP_VERSION = "1.0.0";
+        
+        // Current state
+        let state = {
+            vehicleCount: 20,
+            averageSpeed: 40,
+            prediction: null,
+            loading: false,
+            vehicles: []
+        };
+
+        // Initialize the app
+        function init() {
+            updateVehicleCount(state.vehicleCount);
+            updateAverageSpeed(state.averageSpeed);
+            renderVehicles();
+            // Run prediction on load
+            setTimeout(() => predictTraffic(), 500);
+            
+            console.log(`Chennai Traffic Predictor v${APP_VERSION} initialized successfully.`);
+        }
+
+        // Update vehicle count
+        function updateVehicleCount(value) {
+            state.vehicleCount = parseInt(value);
+            document.getElementById('vehicle-count-display').textContent = `${value} vehicles`;
+            renderVehicles();
+        }
+
+        // Update average speed
+        function updateAverageSpeed(value) {
+            state.averageSpeed = parseInt(value);
+            document.getElementById('avg-speed-display').textContent = `${value} km/h`;
+            updateVehicleSpeeds();
+        }
+
+        // Predict traffic based on inputs
+        function predictTraffic() {
+            // Show loading state
+            const btn = document.getElementById('predict-btn');
+            btn.textContent = 'Analyzing...';
+            btn.disabled = true;
+            state.loading = true;
+
+            // Simulate API call delay
+            setTimeout(() => {
+                // Simple model logic
+                let congestionLevel;
+                if (state.vehicleCount < 15 && state.averageSpeed > 45) {
+                    congestionLevel = 'Low';
+                } else if (state.vehicleCount > 35 || state.averageSpeed < 25) {
+                    congestionLevel = 'High';
+                } else {
+                    congestionLevel = 'Medium';
+                }
+                
+                // Calculate probabilities
+                let probabilities = {
+                    'Low': 0.1,
+                    'Medium': 0.2,
+                    'High': 0.7
+                };
+                
+                if (congestionLevel === 'Low') {
+                    probabilities = {
+                        'Low': 0.8,
+                        'Medium': 0.15,
+                        'High': 0.05
+                    };
+                } else if (congestionLevel === 'Medium') {
+                    probabilities = {
+                        'Low': 0.15,
+                        'Medium': 0.75,
+                        'High': 0.1
+                    };
+                }
+                
+                // Set prediction
+                state.prediction = {
+                    congestionLevel: congestionLevel,
+                    probabilities: probabilities,
+                    color: congestionLevel === 'Low' ? '#4caf50' : (congestionLevel === 'Medium' ? '#ff9800' : '#f44336')
+                };
+                
+                // Update UI
+                renderPrediction();
+                updateVehicleColors();
+                
+                // Reset button
+                btn.textContent = 'Predict Traffic Congestion';
+                btn.disabled = false;
+                state.loading = false;
+                
+                // Show result section
+                document.getElementById('result-section').style.display = 'block';
+                
+                console.log(`Prediction complete: ${congestionLevel} congestion level`);
+            }, 1000);
+        }
+
+        // Render prediction results
+        function renderPrediction() {
+            if (!state.prediction) return;
+            
+            // Update prediction box
+            const predictionBox = document.getElementById('prediction-box');
+            predictionBox.style.backgroundColor = state.prediction.color;
+            document.getElementById('prediction-text').textContent = state.prediction.congestionLevel;
+            
+            // Update probability bars
+            const probabilityBars = document.getElementById('probability-bars');
+            probabilityBars.innerHTML = '';
+            
+            for (const [level, probability] of Object.entries(state.prediction.probabilities)) {
+                const barColor = level === 'Low' ? '#4caf50' : (level === 'Medium' ? '#ff9800' : '#f44336');
+                
+                const probabilityBar = document.createElement('div');
+                probabilityBar.className = 'probability-bar';
+                probabilityBar.innerHTML = `
+                    <span class="level-label">${level}</span>
+                    <div class="bar-container">
+                        <div class="bar" style="width: ${probability * 100}%; background-color: ${barColor}"></div>
+                        <span class="probability-value">${(probability * 100).toFixed(1)}%</span>
+                    </div>
+                `;
+                
+                probabilityBars.appendChild(probabilityBar);
+            }
+            
+            // Update traffic advice
+            const adviceText = document.getElementById('traffic-advice-text');
+            if (state.prediction.congestionLevel === 'Low') {
+                adviceText.textContent = 'Traffic is flowing smoothly. Good time for travel.';
+            } else if (state.prediction.congestionLevel === 'Medium') {
+                adviceText.textContent = 'Moderate traffic conditions. Expect slight delays.';
+            } else {
+                adviceText.textContent = 'Heavy traffic congestion. Consider alternative routes.';
+            }
+        }
+
+        // Create and render vehicles
+        function renderVehicles() {
+            const lane1 = document.getElementById('lane-1');
+            const lane2 = document.getElementById('lane-2');
+            
+            // Clear existing vehicles
+            lane1.innerHTML = '';
+            lane2.innerHTML = '';
+            
+            // Calculate number of vehicles based on input
+            const totalVehicles = Math.min(Math.ceil(state.vehicleCount / 2), 10);
+            const lane1Vehicles = Math.ceil(totalVehicles / 2);
+            const lane2Vehicles = totalVehicles - lane1Vehicles;
+            
+            // Create vehicles for lane 1 (going right)
+            for (let i = 0; i < lane1Vehicles; i++) {
+                const vehicle = document.createElement('div');
+                vehicle.className = 'vehicle';
+                vehicle.style.backgroundColor = state.prediction ? state.prediction.color : '#666';
+                
+                // Set animation properties
+                const duration = 20 - Math.min(state.averageSpeed / 5, 15); // Speed factor
+                const delay = i * (duration / lane1Vehicles); // Stagger start times
+                
+                vehicle.style.animation = `driveForward ${duration}s linear infinite ${delay}s`;
+                
+                lane1.appendChild(vehicle);
+            }
+            
+            // Create vehicles for lane 2 (going left)
+            for (let i = 0; i < lane2Vehicles; i++) {
+                const vehicle = document.createElement('div');
+                vehicle.className = 'vehicle';
+                vehicle.style.backgroundColor = state.prediction ? state.prediction.color : '#666';
+                
+                // Set animation properties
+                const duration = 18 - Math.min(state.averageSpeed / 5, 13); // Speed factor
+                const delay = i * (duration / lane2Vehicles); // Stagger start times
+                
+                vehicle.style.animation = `driveBackward ${duration}s linear infinite ${delay}s`;
+                
+                lane2.appendChild(vehicle);
+            }
+        }
+        
+        // Update vehicle speeds based on average speed
+        function updateVehicleSpeeds() {
+            const vehicles = document.querySelectorAll('.vehicle');
+            vehicles.forEach((vehicle, index) => {
+                // Calculate duration based on lane and speed
+                const isLane1 = vehicle.parentElement.id === 'lane-1';
+                const baseDuration = isLane1 ? 20 : 18;
+                const speedFactor = isLane1 ? Math.min(state.averageSpeed / 5, 15) : Math.min(state.averageSpeed / 5, 13);
+                const duration = baseDuration - speedFactor;
+                
+                // Calculate delay based on position
+                const count = isLane1 ? Math.ceil(Math.min(Math.ceil(state.vehicleCount / 2), 10) / 2) : Math.floor(Math.min(Math.ceil(state.vehicleCount / 2), 10) / 2);
+                const position = index % count;
+                const delay = position * (duration / count);
+                
+                // Set new animation with updated speed
+                const animation = isLane1 ? 'driveForward' : 'driveBackward';
+                vehicle.style.animation = `${animation} ${duration}s linear infinite ${delay}s`;
+            });
+        }
+        
+        // Update vehicle colors based on prediction
+        function updateVehicleColors() {
+            if (!state.prediction) return;
+            
+            const vehicles = document.querySelectorAll('.vehicle');
+            vehicles.forEach(vehicle => {
+                vehicle.style.backgroundColor = state.prediction.color;
+            });
+        }
+        
+        // Download function for the HTML file
+        function downloadHTML() {
+            const html = document.documentElement.outerHTML;
+            const blob = new Blob([html], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'chennai-traffic-predictor.html';
+            a.click();
+            
+            URL.revokeObjectURL(url);
+        }
+        
+        // Initialize on page load
+        window.onload = init;
+    </script>
+</body>
+</html>
