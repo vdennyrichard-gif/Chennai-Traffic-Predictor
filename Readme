@@ -1,118 +1,130 @@
-🚦 Chennai Traffic Predictor
-📌 Project Overview
+# 🚦 Chennai Traffic Predictor
 
-The Chennai Traffic Predictor is a machine learning–based system designed to predict traffic congestion levels on major roads in Chennai. It analyzes historical traffic data along with time, location, and environmental factors to provide accurate traffic predictions.
+## 📌 Project Overview
 
-🎯 Objectives
+The **Chennai Traffic Predictor** is a machine learning–based system designed to predict traffic congestion levels on major roads in Chennai. It analyzes historical traffic data along with time, location, and environmental factors to provide accurate traffic predictions.
 
-Predict traffic congestion levels in Chennai
+---
 
-Help commuters plan better travel routes
+## 🎯 Objectives
 
-Assist traffic authorities in traffic management
+* Predict traffic congestion levels in Chennai.
+* Help commuters plan better travel routes.
+* Assist traffic authorities in effective traffic management.
+* Support smart-city transportation systems.
 
-Support smart city transportation systems
+---
 
-🧠 Technologies Used
+## 🧠 Technologies Used
 
-Programming Language: Python
+| Technology               | Purpose                    |
+| ------------------------ | -------------------------- |
+| **Programming Language** | Python                     |
+| **Machine Learning**     | Scikit-learn / XGBoost     |
+| **Data Handling**        | Pandas, NumPy              |
+| **Visualization**        | Matplotlib / Seaborn       |
+| **Frontend (Optional)**  | HTML, CSS, JavaScript      |
+| **Backend (Optional)**   | Flask / Django             |
+| **Deployment**           | Localhost / Cloud Platform |
 
-Machine Learning: Scikit-learn / XGBoost
+---
 
-Data Handling: Pandas, NumPy
+## 📊 Features
 
-Visualization: Matplotlib / Seaborn
+* Time-based traffic prediction (peak & non-peak hours).
+* Location-based congestion analysis.
+* Real-time and historical data support.
+* Predicts traffic as **Low, Medium, or High**.
+* Explainable and interpretable results.
 
-Frontend (Optional): HTML, CSS, JavaScript
+---
 
-Backend (Optional): Flask / Django
+## 🏗️ System Architecture
 
-Deployment: Localhost / Cloud Platform
+The system follows these major stages:
 
-📊 Features
-
-Time-based traffic prediction (peak & non-peak hours)
-
-Location-based congestion analysis
-
-Real-time and historical data support
-
-Predicts traffic as Low, Medium, or High
-
-Explainable and interpretable results
-
-🏗️ System Architecture
-
+```text
 Data Collection
-
+       ↓
 Data Preprocessing
-
+       ↓
 Feature Engineering
-
+       ↓
 Model Training
-
+       ↓
 Traffic Prediction
-
+       ↓
 Result Visualization
+```
 
-▶️ How to Run the Project
+---
 
-Clone the repository
+## ▶️ How to Run the Project
 
-git clone https://github.com/your-username/chennai-traffic-predictor.git
+### 1. Clone the repository
 
+```bash
+git clone https://github.com/vdennyrichard-gif/Chennai-Traffic-Predictor.git
+```
 
-Install required libraries
+### 2. Open the project directory
 
+```bash
+cd Chennai-Traffic-Predictor
+```
+
+### 3. Install required libraries
+
+```bash
 pip install -r requirements.txt
+```
 
+### 4. Run the application
 
-Run the application
-
+```bash
 python app.py
+```
 
-📈 Output
+---
 
-Traffic congestion prediction for selected routes
+## 📈 Output
 
-Visual graphs showing traffic trends
+The project provides:
 
-Clear classification of congestion levels
+* Traffic congestion prediction for selected routes.
+* Visual graphs showing traffic trends.
+* Clear classification of congestion levels.
 
-🔮 Future Enhancements
+---
 
-Integration with real-time GPS and IoT sensors
+## 🔮 Future Enhancements
 
-Live traffic map visualization
+* Integration with real-time GPS and IoT sensors.
+* Live traffic map visualization.
+* Mobile application support.
+* Advanced deep learning models.
 
-Mobile application support
+---
 
-Advanced deep learning models
+## 🏙️ Use Case
 
-🏙️ Use Case
+The Chennai Traffic Predictor can be useful for:
 
-Daily commuters
+* **Daily commuters**
+* **Traffic control departments**
+* **Ride-sharing platforms**
+* **Smart city infrastructure**
 
-Traffic control departments
+---
 
-Ride-sharing platforms
-
-Smart city infrastructure
-
-📄 License
+## 📄 License
 
 This project is for educational and research purposes.
 
-If you want, I can also:
+---
 
-✅ Simplify this README for mini-project
+## 👨‍💻 Contributors
 
-✅ Convert it to IEEE project format
+**Arun Ram R & Denny Richard V**
 
-✅ Add screenshots section
-
-✅ Customize for Frontend / Backend role
-
-Arun Ram R & Denny Richard V
-
-If you Put Star for like this project
+If you like this project, please consider giving it a ⭐ on GitHub!
